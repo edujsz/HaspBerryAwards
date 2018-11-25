@@ -1,6 +1,8 @@
 package com.eduardo.raspberryawards.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,11 +21,12 @@ public class Movie {
 
     private boolean winner;
 
-    @ManyToMany(mappedBy = "movies")
+    @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     List<Studio> studios;
 
-    @ManyToMany(mappedBy = "movies")
+    @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     List<Producer> producers;
-
 
 }

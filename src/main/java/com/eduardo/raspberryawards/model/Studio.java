@@ -21,7 +21,7 @@ public class Studio {
 
     private String name;
 
-    @JsonIgnore
     @ManyToMany()
-    List<Movie> movies;
+    @JsonIgnore
+    private List<Movie> movies;
 }

@@ -2,10 +2,16 @@ package com.eduardo.raspberryawards.service;
 
 import com.eduardo.raspberryawards.model.Movie;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Map;
 
 public interface MovieService {
 
-    Optional<List<Movie>> findByPublishYear(Integer publishYear);
+    Collection<Movie> findByPublishYear(Integer publishYear);
+
+    Iterable<Movie> findAll();
+
+    Movie save(Movie movie);
+
+    public Map<Integer, Long> findTop2WinnerYears();
 }

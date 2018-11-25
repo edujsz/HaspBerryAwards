@@ -3,12 +3,13 @@ package com.eduardo.raspberryawards.controller;
 import com.eduardo.raspberryawards.model.Movie;
 import com.eduardo.raspberryawards.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Map;
 
 @RestController
 @Component
@@ -19,8 +20,23 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
-    @GetMapping("/{publishYear}")
-    public ResponseEntity<List<Movie>> findByPublishYear(@PathVariable(value = "publishYear") Integer publishYear){
-        return ResponseEntity.ok(movieService.findByPublishYear(publishYear).get());
+    @RequestMapping(value = "/{publishYear}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<Movie>> findByPublishYear(@PathVariable(value = "publishYear") Integer publishYear){
+        return ResponseEntity.ok(movieService.findByPublishYear(publishYear));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Iterable<Movie>> findAll(){
+        return ResponseEntity.ok(this.movieService.findAll());
+    }
+
+    @PostMapping
+    public ResponseEntity<Movie> save(@RequestBody Movie movie){
+        return ResponseEntity.ok(this.movieService.save(movie));
+    }
+
+    @GetMapping("/topWinners")
+    public ResponseEntity<Map<Integer,Long>> findTop2WinnerYears(){
+        return ResponseEntity.ok(this.movieService.findTop2WinnerYears());
     }
 }

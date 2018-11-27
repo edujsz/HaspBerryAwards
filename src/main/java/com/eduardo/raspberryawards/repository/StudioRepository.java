@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface StudioRepository extends CrudRepository<Long, Studio> {
+public interface StudioRepository extends CrudRepository<Studio, Long> {
 
     @Query(value = "SELECT new com.eduardo.raspberryawards.dto.StudioDTO (S.name, COUNT(1))" +
             " FROM Studio S " +

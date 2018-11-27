@@ -12,7 +12,7 @@ import java.util.List;
 public class StudioServicceImpl implements StudioService {
 
     @Autowired
-    StudioRepository studioRepository;
+    private StudioRepository studioRepository;
 
     @Override
     public List<StudioDTO> findCountWinsForEachStudioOrderByWins() {

@@ -21,7 +21,7 @@ import java.util.List;
 public class StudioController {
 
     @Autowired
-    StudioService studioService;
+    private StudioService studioService;
 
     @RequestMapping(value = "/studiosByWins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StudioDTO>> listStudioByWins() {

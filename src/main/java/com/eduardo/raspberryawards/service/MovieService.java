@@ -1,8 +1,10 @@
 package com.eduardo.raspberryawards.service;
 
+import com.eduardo.raspberryawards.dto.WinnerYearDTO;
 import com.eduardo.raspberryawards.model.Movie;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface MovieService {
@@ -13,5 +15,6 @@ public interface MovieService {
 
     Movie save(Movie movie);
 
-    public Map<Integer, Long> findTop2WinnerYears();
+    List<WinnerYearDTO> findTop2WinnerYears();
+
 }

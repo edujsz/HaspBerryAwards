@@ -1,5 +1,6 @@
 package com.eduardo.raspberryawards.controller;
 
+import com.eduardo.raspberryawards.dto.WinnerYearDTO;
 import com.eduardo.raspberryawards.model.Movie;
 import com.eduardo.raspberryawards.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @Component
@@ -36,7 +37,8 @@ public class MovieController {
     }
 
     @GetMapping("/topWinners")
-    public ResponseEntity<Map<Integer,Long>> findTop2WinnerYears(){
+    public ResponseEntity<List<WinnerYearDTO>> findTop2WinnerYears(){
         return ResponseEntity.ok(this.movieService.findTop2WinnerYears());
     }
+
 }

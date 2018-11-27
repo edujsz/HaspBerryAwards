@@ -1,32 +1,40 @@
 package com.eduardo.raspberryawards.model;
 
-import lombok.Data;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
-@Data
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Movie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
     private Integer publishYear;
 
-    private boolean winner;
+    private Boolean winner;
 
-    @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    List<Studio> studios;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="studio_movies",joinColumns=@JoinColumn(name = "movies_id"),
+            inverseJoinColumns=@JoinColumn(name = "studios_id"))
+    @JsonManagedReference
+    private Set<Studio> studios;
 
-    @ManyToMany(mappedBy = "movies", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    List<Producer> producers;
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="producer_movies",joinColumns=@JoinColumn(name = "movies_id"),
+            inverseJoinColumns=@JoinColumn(name = "producers_id"))
+    @JsonManagedReference
+    private Set<Producer> producers;
 }

@@ -5,14 +5,11 @@ import com.eduardo.raspberryawards.model.Movie;
 import com.eduardo.raspberryawards.repository.MovieRepository;
 import com.eduardo.raspberryawards.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
+import java.util.List;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -36,13 +33,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Map<Integer, Long> findTop2WinnerYears(){
-        Collection<Movie> movies = new ArrayList<>();
-        this.findAll().iterator().forEachRemaining(movies::add);
-        movies
-                .stream()
-                .filter(movie -> (movie.isWinner()))
-                .map(Collectors.groupingBy(Movie::getPublishYear, Collectors.counting()));
-        return null;
+    public List<WinnerYearDTO> findTop2WinnerYears(){
+        Movie movie = new Movie();
+        return movieRepository.findTop2WinnerYears(PageRequest.of(0,2));
     }
 }

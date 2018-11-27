@@ -1,15 +1,15 @@
 package com.eduardo.raspberryawards.service;
 
+import com.eduardo.raspberryawards.dto.MovieDTO;
 import com.eduardo.raspberryawards.dto.WinnerYearDTO;
 import com.eduardo.raspberryawards.model.Movie;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public interface MovieService {
 
-    Collection<Movie> findByPublishYear(Integer publishYear);
+    Collection<MovieDTO> findByPublishYear(Integer year);
 
     Iterable<Movie> findAll();
 

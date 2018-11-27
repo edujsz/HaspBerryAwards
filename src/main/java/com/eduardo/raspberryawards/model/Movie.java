@@ -20,9 +20,9 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String title;
 
-    private Integer publishYear;
+    private Integer year;
 
     private Boolean winner;
 

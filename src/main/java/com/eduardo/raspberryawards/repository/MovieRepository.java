@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface MovieRepository extends CrudRepository<Movie, Long> {
 
-    Collection<Movie> findByPublishYear(Integer publishYear);
+    Collection<Movie> findByYear(Integer year);
 
-    @Query(value = "SELECT new com.eduardo.raspberryawards.dto.WinnerYearDTO (M.publishYear, COUNT(M.publishYear))" +
-            " FROM Movie M GROUP BY M.publishYear ORDER BY 2 DESC")
+    @Query(value = "SELECT new com.eduardo.raspberryawards.dto.WinnerYearDTO (M.year, COUNT(M.year))" +
+            " FROM Movie M WHERE M.winner = 1 GROUP BY M.year ORDER BY 2 DESC")
     List<WinnerYearDTO> findTop2WinnerYears(Pageable pageable);
 
 }

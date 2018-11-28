@@ -2,6 +2,8 @@ package com.eduardo.raspberryawards.service.impl;
 
 import com.eduardo.raspberryawards.dto.MovieDTO;
 import com.eduardo.raspberryawards.dto.WinnerYearDTO;
+import com.eduardo.raspberryawards.exception.MovieIsWinnerException;
+import com.eduardo.raspberryawards.exception.MovieNotFoundException;
 import com.eduardo.raspberryawards.model.Movie;
 import com.eduardo.raspberryawards.model.Producer;
 import com.eduardo.raspberryawards.model.Studio;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,5 +77,23 @@ public class MovieServiceImpl implements MovieService {
     public List<WinnerYearDTO> findTop2WinnerYears(){
         Movie movie = new Movie();
         return movieRepository.findTop2WinnerYears(PageRequest.of(0,2));
+    }
+
+    @Override
+    public void delete(Long id) throws MovieNotFoundException, MovieIsWinnerException {
+        Optional<Movie> movie = this.movieRepository.findById(id);
+
+        validateMovie(id, movie);
+
+        this.movieRepository.delete(movie.get());
+
+    }
+
+    private void validateMovie(Long id, Optional<Movie> movie) throws MovieNotFoundException, MovieIsWinnerException {
+        movie.orElseThrow(() -> new MovieNotFoundException("Filme não localizado com o ID:" + id.toString()));
+
+        if(movie.get().getWinner()){
+            throw new MovieIsWinnerException("Filme não pode ser excluído pois é um vencedor");
+        }
     }
 }

@@ -26,7 +26,7 @@ public class MovieServiceImpl implements MovieService {
     private MovieRepository movieRepository;
 
     @Override
-    public Collection<MovieDTO> findByPublishYear(Integer year) {
+    public Collection<MovieDTO> findByYear(Integer year) {
         return this.buildProductDTO(movieRepository.findByYear(year));
     }
 
@@ -69,11 +69,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie save(Movie movie){
-       return this.movieRepository.save(movie);
-    }
-
-    @Override
     public List<WinnerYearDTO> findTop2WinnerYears(){
         Movie movie = new Movie();
         return movieRepository.findTop2WinnerYears(PageRequest.of(0,2));
@@ -87,6 +82,11 @@ public class MovieServiceImpl implements MovieService {
 
         this.movieRepository.delete(movie.get());
 
+    }
+
+    @Override
+    public Movie save(Movie movie) {
+        return this.movieRepository.save(movie);
     }
 
     private void validateMovie(Long id, Optional<Movie> movie) throws MovieNotFoundException, MovieIsWinnerException {

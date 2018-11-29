@@ -24,11 +24,8 @@ public class ProducerServiceImpl implements ProducerService {
     public ProducerWinIntervalDTO localizeIntervals(){
 
         List<Producer> producers = this.producerRepository.findAll();
-        ProducerWinIntervalDTO producerWinIntervalDTO = new ProducerWinIntervalDTO();
         List<ProducerDTO> producerDTOS = getIntervalForEachProducer(producers);
-        findFinalIntervals(producerWinIntervalDTO, producerDTOS);
-
-        return producerWinIntervalDTO;
+        return findFinalIntervals(producerDTOS);
     }
 
     @Override
@@ -36,10 +33,13 @@ public class ProducerServiceImpl implements ProducerService {
         return producerRepository.save(producer);
     }
 
-    private void findFinalIntervals(ProducerWinIntervalDTO producerWinIntervalDTO, List<ProducerDTO> producerDTOS) {
+    private ProducerWinIntervalDTO findFinalIntervals(List<ProducerDTO> producerDTOS) {
+        ProducerWinIntervalDTO producerWinIntervalDTO = new ProducerWinIntervalDTO();
         Collections.sort(producerDTOS, Comparator.comparing(ProducerDTO::getInterval));
         producerWinIntervalDTO.setMin(producerDTOS.get(0));
-        producerWinIntervalDTO.setMax(producerDTOS.get(calculateInterval(1, producerDTOS.size())));
+        producerWinIntervalDTO.setMax(producerDTOS.get(producerDTOS.size()-1));
+
+        return producerWinIntervalDTO;
     }
 
     private List<ProducerDTO> getIntervalForEachProducer(List<Producer> producers) {
@@ -62,19 +62,26 @@ public class ProducerServiceImpl implements ProducerService {
 
         Collections.sort(moviesOrderedByYear,Comparator.comparing(Movie::getYear));
 
-        Integer previousWin = 0;
+        Movie previousMovieWin = moviesOrderedByYear.get(0);
         Integer interval = 0;
+        Integer minInterval = 0;
+        Integer maxInterval = 0;
 
         for(Movie movie:moviesOrderedByYear) {
-            previousWin = initializePreviousWin(previousWin, movie);
-            if (interval <= (calculateInterval(previousWin, movie.getYear()))) {
-                interval = calculateInterval(previousWin, movie.getYear());
-                setProducerDTOValues(producerName, min, previousWin, interval, movie);
-                previousWin = movie.getYear();
-            } if (interval >= (calculateInterval(previousWin, movie.getYear()))) {
-                interval = calculateInterval(previousWin, movie.getYear());
-                setProducerDTOValues(producerName, max, previousWin, interval, movie);
-                previousWin = movie.getYear();
+            if (previousMovieWin.getId().equals(movie.getId())){
+                setProducerDTOValues(producerName, min, previousMovieWin.getYear(), interval, movie);
+                setProducerDTOValues(producerName, max, previousMovieWin.getYear(), interval, movie);
+            }else{
+                interval = calculateInterval(previousMovieWin.getYear(), movie.getYear());
+                if (interval >= maxInterval) {
+                    maxInterval = interval;
+                    setProducerDTOValues(producerName, max, previousMovieWin.getYear(), interval, movie);
+                }
+                if (interval <= minInterval) {
+                    minInterval = interval;
+                    setProducerDTOValues(producerName, min, previousMovieWin.getYear(), interval, movie);
+                }
+                previousMovieWin = movie;
             }
         }
 
@@ -87,11 +94,6 @@ public class ProducerServiceImpl implements ProducerService {
 
     private int calculateInterval(Integer previousWin, Integer year) {
         return year - previousWin;
-    }
-
-    private Integer initializePreviousWin(Integer previousWin, Movie movie) {
-        previousWin = previousWin == 0 ? movie.getYear() : previousWin;
-        return previousWin;
     }
 
     private void setProducerDTOValues(String producerName, ProducerDTO min, Integer previousWin, Integer interval, Movie movie) {

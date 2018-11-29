@@ -28,8 +28,8 @@ public class MovieController {
     SetupData data;
 
     @RequestMapping(value = "/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<MovieDTO>> findByPublishYear(@PathVariable(value = "year") Integer year){
-        return ResponseEntity.ok(movieService.findByPublishYear(year));
+    public ResponseEntity<Collection<MovieDTO>> findByYear(@PathVariable(value = "year") Integer year){
+        return ResponseEntity.ok(movieService.findByYear(year));
     }
 
     @GetMapping("")
@@ -37,22 +37,13 @@ public class MovieController {
         return ResponseEntity.ok(this.movieService.findAll());
     }
 
-    @PostMapping
-    public ResponseEntity<Movie> save(@RequestBody Movie movie){
-        return ResponseEntity.ok(this.movieService.save(movie));
-    }
-
-    @GetMapping("/topWinners")
+    @RequestMapping(value = "/{topWinners}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WinnerDTO> findTop2WinnerYears(){
         return ResponseEntity.ok(new WinnerDTO(this.movieService.findTop2WinnerYears()));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping(value = "/delete/{id", method = RequestMethod.DELETE)
     public void delete(@PathVariable(value = "id") Long id) throws MovieNotFoundException, MovieIsWinnerException {
         this.movieService.delete(id);
-    }
-    @GetMapping("/test")
-    public void test(){
-        data.test();
     }
 }

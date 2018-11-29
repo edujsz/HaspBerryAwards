@@ -11,14 +11,14 @@ import java.util.List;
 
 public interface MovieService {
 
-    Collection<MovieDTO> findByPublishYear(Integer year);
+    Collection<MovieDTO> findByYear(Integer year);
 
     Iterable<Movie> findAll();
 
-    Movie save(Movie movie);
-
     List<WinnerYearDTO> findTop2WinnerYears();
 
-    public void delete(Long id) throws MovieNotFoundException, MovieIsWinnerException;
+    void delete(Long id) throws MovieNotFoundException, MovieIsWinnerException;
+
+    Movie save(Movie movie);
 
 }

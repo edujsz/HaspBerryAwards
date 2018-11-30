@@ -8,12 +8,12 @@
 	
 ### Servidor
 	O projeto foi desenvolvido utilizando SpringBoot. 
-	para subir o servidor basta: executar o mvn clean install.
+	Para subir o servidor basta: executar o mvn clean install.
 	Ir até a pasta target do projeto e executar no prompt java -jar raspberry-awards-0.0.1-SNAPSHOT.jar.
 	
 ### Swagger
 	O Swagger está habilitado para o projeto. 
-	Pode ser acessado através da url servidor:porta/swagger-ui.html. Ex: http://localhost:8080/swagger-ui.html.
+	Pode ser acessado através da url servidor:porta/swagger-ui.html . Ex: http://localhost:8080/swagger-ui.html.
 	
 ### Heroku
 	O diretório do git tem uma pipeline configurada com deploy automático no Heroku.

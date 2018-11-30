@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProducerController {
 
     @Autowired
-    ProducerService producerService;
+    private ProducerService producerService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProducerWinIntervalDTO> intervals(){
-        return ResponseEntity.ok(this.producerService.localizeIntervals());
+        return ResponseEntity.ok(this.producerService.localizeIntervals(this.producerService.findAll()));
     }
 
 }

@@ -16,51 +16,46 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 @Component
 public class SetupData {
 
     @Autowired
-    ProducerService producerService;
+    private ProducerService producerService;
 
     @Autowired
-    StudioService studioService;
+    private StudioService studioService;
 
     @Autowired
-    MovieService movieService;
+    private MovieService movieService;
 
-    private HashMap<String, Producer> producers = new HashMap<String, Producer>();
+    private HashMap<String, Producer> producers = new HashMap<>();
     private HashMap<String, Studio> studios = new HashMap<String, Studio>();
 
-    public List<FlatFileMovieDTO> loadFlatFileMovieDTO(String fileName) {
+    private List<FlatFileMovieDTO> loadFlatFileMovieDTO(String fileName) throws Exception {
         List<FlatFileMovieDTO> flatFileMovieDTOS = new ArrayList<>();
-        try {
+        CsvMapper csvMapper = new CsvMapper();
+        CsvSchema schema = csvMapper
+                .typedSchemaFor(FlatFileMovieDTO.class)
+                .withoutHeader()
+                .withColumnSeparator(';')
+                .withSkipFirstDataRow(true)
+                .withoutQuoteChar();
+        InputStream file = new ClassPathResource(fileName).getInputStream();
+        MappingIterator<FlatFileMovieDTO  > dataIterator = csvMapper.readerFor(FlatFileMovieDTO.class).with(schema)
+                .readValues(file);
 
-            CsvMapper csvMapper = new CsvMapper();
-            CsvSchema schema = csvMapper
-                    .typedSchemaFor(FlatFileMovieDTO.class)
-                    .withoutHeader()
-                    .withColumnSeparator(';')
-                    .withSkipFirstDataRow(true)
-                    .withoutQuoteChar();
-            File file = new ClassPathResource(fileName).getFile();
-            MappingIterator<FlatFileMovieDTO  > dataIterator = csvMapper.readerFor(FlatFileMovieDTO.class).with(schema)
-                    .readValues(file);
-
-            while(dataIterator.hasNext()){
-                flatFileMovieDTOS.add(dataIterator.nextValue());
-            }
-
-            return flatFileMovieDTOS;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.emptyList();
+        while(dataIterator.hasNext()){
+            flatFileMovieDTOS.add(dataIterator.nextValue());
         }
+
+        return flatFileMovieDTOS;
     }
 
     @PostConstruct
-    public void importData(){
+    public void importData() throws Exception{
         List<FlatFileMovieDTO> flatFileMovieDTOS = loadFlatFileMovieDTO("/static/movielist.csv");
         Collection<Producer> movieProducers;
         Collection<Studio> movieStudios;
@@ -77,7 +72,7 @@ public class SetupData {
         Movie movie = new Movie();
         movie.setTitle(flatFileMovieDTO.getTitle());
         movie.setYear(Integer.valueOf(flatFileMovieDTO.getYear()));
-        movie.setWinner(flatFileMovieDTO.getWinner().toLowerCase().equals("yes") ? Boolean.TRUE:Boolean.FALSE);
+        movie.setWinner(flatFileMovieDTO.getWinner().equalsIgnoreCase("yes") ? Boolean.TRUE:Boolean.FALSE);
         movie.setProducers(new HashSet<>(movieProducers));
         movie.setStudios(new HashSet<>(movieStudios));
         this.movieService.save(movie);

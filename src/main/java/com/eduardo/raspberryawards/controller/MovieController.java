@@ -27,14 +27,9 @@ public class MovieController {
     @Autowired
     SetupData data;
 
-    @RequestMapping(value = "/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "findByYear/{year}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<MovieDTO>> findByYear(@PathVariable(value = "year") Integer year){
         return ResponseEntity.ok(movieService.findByYear(year));
-    }
-
-    @GetMapping("")
-    public ResponseEntity<Iterable<Movie>> findAll(){
-        return ResponseEntity.ok(this.movieService.findAll());
     }
 
     @RequestMapping(value = "/{topWinners}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +37,7 @@ public class MovieController {
         return ResponseEntity.ok(new WinnerDTO(this.movieService.findTop2WinnerYears()));
     }
 
-    @RequestMapping(value = "/delete/{id", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable(value = "id") Long id) throws MovieNotFoundException, MovieIsWinnerException {
         this.movieService.delete(id);
     }

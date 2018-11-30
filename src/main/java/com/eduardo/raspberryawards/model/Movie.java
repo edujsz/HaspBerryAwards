@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -37,4 +38,18 @@ public class Movie {
             inverseJoinColumns=@JoinColumn(name = "producers_id"))
     @JsonManagedReference
     private Set<Producer> producers;
+
+    public void addProducer(Producer producer){
+        if(this.getProducers() == null){
+            this.producers = new HashSet<>();
+        }
+        this.producers.add(producer);
+    }
+
+    public void addStudio(Studio studio){
+        if(this.getStudios() == null){
+            this.studios = new HashSet<>();
+        }
+        this.studios.add(studio);
+    }
 }

@@ -6,7 +6,6 @@ import com.eduardo.raspberryawards.model.Movie;
 import com.eduardo.raspberryawards.model.Producer;
 import com.eduardo.raspberryawards.repository.ProducerRepository;
 import com.eduardo.raspberryawards.service.ProducerService;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +18,14 @@ import java.util.List;
 public class ProducerServiceImpl implements ProducerService {
 
     @Autowired
-    ProducerRepository producerRepository;
+    private ProducerRepository producerRepository;
 
-    public ProducerWinIntervalDTO localizeIntervals(){
+    @Override
+    public List<Producer> findAll() {
+        return this.producerRepository.findAll();
+    }
 
-        List<Producer> producers = this.producerRepository.findAll();
+    public ProducerWinIntervalDTO localizeIntervals(List<Producer> producers){
         List<ProducerDTO> producerDTOS = getIntervalForEachProducer(producers);
         return findFinalIntervals(producerDTOS);
     }
@@ -46,17 +48,16 @@ public class ProducerServiceImpl implements ProducerService {
         List<ProducerDTO> producerDTOS = new ArrayList<>();
         List<Movie> movies;
         for(Producer producer:producers){
-            Hibernate.initialize(producers);
             movies = new ArrayList<>();
             movies.addAll(producer.getMovies());
             if(movies.size() > 1) {
-                producerDTOS.addAll(this.localizIntervalsForEachProducer(movies, producer.getName()));
+                producerDTOS.addAll(this.localizeIntervalsForEachProducer(movies, producer.getName()));
             }
         }
         return producerDTOS;
     }
 
-    private List<ProducerDTO> localizIntervalsForEachProducer(List<Movie> moviesOrderedByYear, String producerName){
+    private List<ProducerDTO> localizeIntervalsForEachProducer(List<Movie> moviesOrderedByYear, String producerName){
         ProducerDTO min = new ProducerDTO();
         ProducerDTO max = new ProducerDTO();
 

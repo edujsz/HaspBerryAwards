@@ -18,4 +18,5 @@
 ### Heroku
 	O diretório do git tem uma pipeline configurada com deploy automático no Heroku.
 	O link para acesso é: https://raspberryawards.herokuapp.com/swagger-ui.html
-	No primeiro acesso deve demorar algum tempo, pois por utilizar a camada free, o Heroku instancia uma nova máquina ao acessar a URL da API.
+	No primeiro acesso deve demorar algum tempo, pois por utilizar a camada free. 
+	O Heroku instancia uma nova máquina ao acessar a URL da API.
